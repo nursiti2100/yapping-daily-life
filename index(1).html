@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#171717">
+<title>Yapping Daily Life Generator</title>
+<style>
+:root{--bg:#f5f3ef;--card:#fff;--ink:#20201f;--muted:#77736e;--line:#e8e3dc;--accent:#9a6b4f;--soft:#f2e9e2;--green:#287653}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:850px;margin:auto;padding:28px 18px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
+.logo{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--accent)}.tag{font-size:11px;background:#e4eee7;color:var(--green);padding:6px 10px;border-radius:99px;font-weight:700}
+h1{font-size:clamp(30px,6vw,48px);line-height:1.05;letter-spacing:-.045em;margin:0 0 10px}.sub{color:var(--muted);max-width:580px;margin:0 0 24px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin:14px 0;box-shadow:0 8px 28px #32200d08}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{display:block;font-size:12px;font-weight:750;margin:0 0 7px;color:#5f5a54}
+select,input{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:#fff;color:var(--ink);font:inherit;outline:none}
+select:focus,input:focus{border-color:var(--accent)}.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pill{border:1px solid var(--line);background:#fff;padding:9px 14px;border-radius:99px;cursor:pointer;font:inherit}.pill.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.stats{display:flex;justify-content:space-between;align-items:center;background:var(--soft);border-radius:14px;padding:14px 16px;margin-top:16px}
+.stats strong{font-size:24px;display:block;line-height:1.2}.stats small{color:var(--muted)}
+button{cursor:pointer;font:inherit}.primary{width:100%;border:0;background:var(--ink);color:#fff;padding:14px 18px;border-radius:13px;font-weight:750;margin-top:16px}.primary:hover{background:#393633}
+.secondary{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:9px;font-size:12px;font-weight:700}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:24px 0 12px}.section-head h2{font-size:18px;margin:0;letter-spacing:-.02em}.count{font-size:11px;color:var(--muted);font-weight:700}
+.post{background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px 16px;margin:10px 0}.post-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.time{font-size:12px;font-weight:800;color:var(--accent);background:var(--soft);padding:5px 9px;border-radius:8px}.category{font-size:11px;color:var(--muted)}.post p{margin:0 0 12px;font-size:15px;white-space:pre-wrap}.post-actions{display:flex;justify-content:flex-end}
+.note{font-size:12px;color:var(--muted);margin:14px 2px 0}.empty{padding:25px;text-align:center;color:var(--muted)}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.wrap{padding:22px 14px 45px}.panel{padding:16px}.top{align-items:flex-start}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><div class="logo">YAPPING DAILY LIFE</div><div class="tag">CONTENT STUDIO</div></div>
+  <h1>Isi timeline,<br>15 menit sekali.</h1>
+  <p class="sub">Generator ide posting X tentang keseharian: cerita random, kerjaan, rumah, pikiran tengah malam, sampai humor receh. Pilih kategori, atur jam, lalu generate.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div class="field"><label for="category">KATEGORI KONTEN</label>
+        <select id="category">
+          <option>Semua kategori</option><option>Daily life random</option><option>Yapping pekerja kantoran</option><option>Keluh kesah kehidupan</option><option>Rumah tangga & keluarga</option><option>Overthinking & isi pikiran</option><option>Humor receh</option><option>Opini relatable</option><option>Momen kecil yang membahagiakan</option>
+        </select>
+      </div>
+      <div class="field"><label for="start">JAM MULAI</label><input id="start" type="time" value="07:00"></div>
+    </div>
+    <div class="field" style="margin-top:17px"><label>JUMLAH POSTINGAN</label>
+      <div class="pills" id="counts">
+        <button class="pill" data-count="8">8</button><button class="pill" data-count="12">12</button><button class="pill active" data-count="16">16</button><button class="pill" data-count="24">24</button><button class="pill" data-count="32">32</button>
+      </div>
+    </div>
+    <div class="stats"><div><small>JEDA ANTAR POSTINGAN</small><strong>15 menit</strong></div><div style="text-align:right"><small>MODE</small><strong style="font-size:17px">Manual</strong></div></div>
+    <button class="primary" id="generate">↻ &nbsp; GENERATE KONTEN</button>
+  </section>
+
+  <div class="section-head"><h2>Jadwal kontenmu</h2><span class="count" id="resultCount">16 IDE</span></div>
+  <div id="results"></div>
+  <button class="primary" id="copyAll" style="margin-top:8px">Salin semua jadwal</button>
+  <p class="note">Catatan: jam di sini adalah jadwal rekomendasi dengan interval 15 menit, bukan auto-posting. Website ini tidak mengirim posting ke X. Ide dibuat langsung di browser dan tidak memerlukan login.</p>
+</main>
+<script>
+const data = [
+["Daily life random","Kadang hal paling menyenangkan hari ini cuma bisa pulang, mandi, terus rebahan tanpa ada yang mengganggu."],
+["Daily life random","Ada nggak sih yang kalau lagi makan enak tiba-tiba kepikiran, besok makan apa lagi ya?"],
+["Daily life random","Hari ini sebenarnya nggak ada kejadian spesial, tapi setidaknya semuanya berjalan cukup baik."],
+["Daily life random","Ternyata semakin dewasa, hal sederhana seperti tidur cukup dan bangun tanpa terburu-buru itu mewah banget."],
+["Daily life random","Satu hal kecil yang bikin hari ini lebih menyenangkan: menemukan lagu yang pas dengan suasana hati."],
+["Yapping pekerja kantoran","Pengen punya pekerjaan yang selesai tepat waktu, pulang masih punya energi, dan gaji cukup buat hidup. Salah satu aja dulu boleh."],
+["Yapping pekerja kantoran","Jam kerja 8 sampai 5, tapi pikiran tentang pekerjaan kadang masih ikut sampai kasur."],
+["Yapping pekerja kantoran","Salah satu kebahagiaan pekerja kantoran: lihat kalender dan ternyata besok tanggal merah."],
+["Yapping pekerja kantoran","Ada yang kalau hari Senin sudah mulai menghitung berapa hari lagi menuju Sabtu?"],
+["Yapping pekerja kantoran","Momen paling ditunggu saat kerja: jam istirahat, makan siang, dan akhirnya jam pulang."],
+["Keluh kesah kehidupan","Kadang bukan nggak bersyukur, cuma pengen sekali-sekali hidup nggak terasa seperti sedang mengejar sesuatu."],
+["Keluh kesah kehidupan","Capeknya orang dewasa itu kadang bukan karena banyak kegiatan, tapi karena terlalu banyak yang harus dipikirkan."],
+["Keluh kesah kehidupan","Pengen menikmati hasil kerja sendiri tanpa harus langsung membaginya ke banyak kebutuhan."],
+["Keluh kesah kehidupan","Ada masa ketika kita cuma ingin menjalani hari biasa tanpa harus memikirkan banyak hal sekaligus."],
+["Keluh kesah kehidupan","Rasanya menyenangkan kalau sesekali punya waktu kosong tanpa merasa harus mengerjakan sesuatu."],
+["Rumah tangga & keluarga","Kehidupan rumah tangga ternyata banyak membahas hal-hal sederhana: stok telur, gas, sabun, dan besok masak apa."],
+["Rumah tangga & keluarga","Sudah punya daftar belanja, sampai toko tetap saja ada barang yang lupa dibeli."],
+["Rumah tangga & keluarga","Momen paling menyenangkan setelah beres-beres rumah adalah melihat rumah rapi walaupun cuma bertahan sebentar."],
+["Rumah tangga & keluarga","Punya anak kecil itu setiap hari selalu ada cerita baru. Kadang lucu, kadang bikin geleng-geleng kepala."],
+["Rumah tangga & keluarga","Diskusi paling rutin di rumah: nanti makan apa, besok masak apa, dan siapa yang beli bahan."],
+["Overthinking & isi pikiran","Pernah nggak tiba-tiba mengingat kejadian lima tahun lalu, terus merasa malu sendiri padahal orang lain mungkin sudah lupa?"],
+["Overthinking & isi pikiran","Aku sering mikir, ternyata banyak hal yang dulu terasa besar sekarang sudah berhasil dilewati."],
+["Overthinking & isi pikiran","Semakin dewasa semakin sadar kalau nggak semua hal perlu dijelaskan kepada semua orang."],
+["Overthinking & isi pikiran","Kadang cuma butuh waktu sendiri sebentar supaya pikiran kembali teratur."],
+["Overthinking & isi pikiran","Lucu ya, kita sering lebih mudah memaklumi orang lain daripada memaklumi diri sendiri."],
+["Humor receh","Niatnya buka HP lima menit, tahu-tahu sudah lupa tadi sebenarnya mau melakukan apa."],
+["Humor receh","Dompet: jangan jajan. Otak: tapi kita pantas mendapatkan kebahagiaan kecil."],
+["Humor receh","Sudah rebahan nyaman, tiba-tiba ingat ada satu pekerjaan yang belum selesai. Mengganggu sekali."],
+["Humor receh","Aku kalau ditanya mau makan apa: terserah. Tapi kalau pilihannya nggak sesuai keinginan, ternyata tidak terserah juga."],
+["Humor receh","Rencana tidur cepat: 10/10. Pelaksanaan: masih scroll sampai lupa waktu."],
+["Opini relatable","Menurutku orang dewasa seharusnya punya jatah cuti khusus untuk sekadar istirahat dari kehidupan."],
+["Opini relatable","Nggak semua orang harus produktif setiap hari. Ada hari ketika menyelesaikan rutinitas biasa saja sudah cukup."],
+["Opini relatable","Setuju nggak kalau makan enak di rumah sendiri kadang lebih menyenangkan daripada harus pergi jauh-jauh?"],
+["Opini relatable","Menurut kalian, lebih menyenangkan punya banyak teman atau punya satu teman yang benar-benar bisa diajak cerita?"],
+["Opini relatable","Hal kecil apa yang menurut kalian seharusnya lebih sering diapresiasi dalam kehidupan sehari-hari?"],
+["Momen kecil yang membahagiakan","Kopi pagi, udara yang masih sejuk, dan belum ada notifikasi pekerjaan. Rasanya ingin waktu berhenti sebentar."],
+["Momen kecil yang membahagiakan","Bahagia kecil hari ini: pulang kerja masih sempat membeli makanan favorit."],
+["Momen kecil yang membahagiakan","Senang sekali rasanya ketika menemukan uang di saku baju yang sudah lama tidak dipakai."],
+["Momen kecil yang membahagiakan","Hari ini berhasil makan sayur, minum cukup air, dan menyelesaikan pekerjaan. Kita usahakan besok lagi."],
+["Momen kecil yang membahagiakan","Ada rasa puas tersendiri ketika berhasil menyelesaikan hal kecil yang sudah ditunda dari kemarin."]
+];
+let count=16, current=[];
+const $=id=>document.getElementById(id);
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function timeAt(start,idx){let [h,m]=start.split(":").map(Number);let total=(h*60+m+idx*15)%1440;return String(Math.floor(total/60)).padStart(2,"0")+":"+String(total%60).padStart(2,"0")}
+function render(){
+ const category=$("category").value;
+ let pool=data.filter(x=>category==="Semua kategori"||x[0]===category);
+ current=shuffle(pool).slice(0,Math.min(count,pool.length));
+ $("resultCount").textContent=current.length+" IDE";
+ $("results").innerHTML=current.map((x,i)=>`<article class="post"><div class="post-top"><span class="time">${timeAt($("start").value||"07:00",i)}</span><span class="category">${x[0]}</span></div><p>${escapeHtml(x[1])}</p><div class="post-actions"><button class="secondary" data-copy="${i}">Salin tweet</button></div></article>`).join("");
+ document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",()=>copyText(current[Number(b.dataset.copy)][1],b)));
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+async function copyText(text,button){try{await navigator.clipboard.writeText(text);let old=button.textContent;button.textContent="Tersalin ✓";setTimeout(()=>button.textContent=old,1300)}catch(e){window.prompt("Salin teks ini:",text)}}
+document.querySelectorAll("[data-count]").forEach(b=>b.addEventListener("click",()=>{count=Number(b.dataset.count);document.querySelectorAll("[data-count]").forEach(x=>x.classList.toggle("active",x===b));render()}));
+$("generate").addEventListener("click",render);$("category").addEventListener("change",render);$("start").addEventListener("change",render);
+$("copyAll").addEventListener("click",()=>copyText(current.map((x,i)=>timeAt($("start").value||"07:00",i)+" | "+x[0]+"\n"+x[1]).join("\n\n"),$("copyAll")));
+render();
+</script>
+</body>
+</html>
